@@ -266,6 +266,33 @@ class ImageTypesTestWithSVG(BaseGrappleTestWithIntrospection):
             "More info: https://docs.wagtail.org/en/stable/topics/images.html#svg-images",
         )
 
+    def test_rendition_dimensions_are_floats(self):
+        query = """
+        query schemaByType ($type: String!) {
+            __type(name: $type) {
+                fields {
+                    name
+                    type {
+                        name
+                        kind
+                        ofType {
+                            name
+                            kind
+                        }
+                    }
+                }
+            }
+        }
+        """
+        results = self.client.execute(query, variables={"type": "CustomImageRendition"})
+        mapping = {
+            field["name"]: field for field in results["data"]["__type"]["fields"]
+        }
+
+        for field_name in ("width", "height"):
+            self.assertEqual(mapping[field_name]["type"]["kind"], "NON_NULL")
+            self.assertEqual(mapping[field_name]["type"]["ofType"]["name"], "Float")
+
     def test_svg_rendition(self):
         query = """
         query ($id: ID!) {

@@ -3,6 +3,7 @@
 ### Fixed
 
 - Declare explicit `fields`/`exclude` on `DjangoObjectType` subclasses to silence graphene-django deprecation warnings ([#430](https://github.com/torchbox/wagtail-grapple/pull/430)) @ponas
+- Allow non-integer dimensions for image renditions returned by GraphQL (fixes #410)
 
 ## [0.31.0] - 2026-04-21
 
